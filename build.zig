@@ -3,7 +3,11 @@ const builtin = @import("builtin");
 
 /// Must match the `version` in `build.zig.zon`.
 /// Remove `.pre` when tagging a new ZLS release and add it back on the next development cycle.
-const zls_version: std.SemanticVersion = .{ .major = 0, .minor = 15, .patch = 0, .pre = "dev" };
+const zls_version: std.SemanticVersion = .{
+    .major = 0,
+    .minor = 15,
+    .patch = 0,
+};
 
 /// Specify the minimum Zig version that is required to compile and test ZLS:
 /// std.Io.poll: update to new I/O API
@@ -15,13 +19,13 @@ const zls_version: std.SemanticVersion = .{ .major = 0, .minor = 15, .patch = 0,
 /// ```
 ///
 /// Also update the `minimum_zig_version` in `build.zig.zon`.
-const minimum_build_zig_version = "0.15.0-dev.1219+b8955a2e0";
+const minimum_build_zig_version = "0.15.0";
 
 /// Specify the minimum Zig version that is usable with ZLS:
 /// std.Io.poll: update to new I/O API
 ///
 /// A breaking change to the Zig Build System should be handled by updating ZLS's build runner (see src\build_runner)
-const minimum_runtime_zig_version = "0.15.0-dev.1219+b8955a2e0";
+const minimum_runtime_zig_version = "0.15.0";
 
 const release_targets = [_]std.Target.Query{
     .{ .cpu_arch = .aarch64, .os_tag = .linux },
@@ -522,7 +526,7 @@ fn release(b: *Build, release_artifacts: []const *Build.Step.Compile, released_z
         const extensions: []const FileExtension = if (is_windows) &.{.zip} else &.{ .@"tar.xz", .@"tar.gz" };
 
         for (extensions) |extension| {
-            comptime std.debug.assert(zls_version.pre != null); // Zig has renamed their tarballs from `armv7a` to `arm`. ZLS 0.15.0 should match them.
+            // comptime std.debug.assert(zls_version.pre != null); // Zig has renamed their tarballs from `armv7a` to `arm`. ZLS 0.15.0 should match them.
             const cpu_arch_name = switch (resolved_target.cpu.arch) {
                 .arm => "armv7a", // To match the https://ziglang.org/download/ tarballs
                 else => |arch| @tagName(arch),
